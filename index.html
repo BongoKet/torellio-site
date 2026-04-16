@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torellio — Shop smarter with AI agents</title>
+<meta name="description" content="Torellio uses AI agents to compare products, find the best prices, and match items to your style. Browser extension and visual scanner.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#1a1a18;
+  --paper:#faf9f6;
+  --warm:#f5f0e8;
+  --accent:#c45a3c;
+  --accent-light:#f0d9cf;
+  --muted:#7a7870;
+  --border:#e2dfd8;
+  --radius:12px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(250,249,246,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-family:'Instrument Serif',serif;
+  font-size:1.5rem;
+  font-weight:400;
+  letter-spacing:-0.02em;
+  color:var(--ink);
+  text-decoration:none;
+}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{
+  text-decoration:none;color:var(--muted);
+  font-size:0.875rem;font-weight:500;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{
+  background:var(--ink);color:var(--paper);
+  padding:0.5rem 1.25rem;border-radius:8px;
+  font-size:0.875rem;font-weight:600;
+  text-decoration:none;transition:opacity 0.2s;
+}
+.nav-cta:hover{opacity:0.85}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:8rem 2rem 4rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  top:-20%;left:50%;transform:translateX(-50%);
+  width:800px;height:800px;
+  background:radial-gradient(circle,var(--accent-light) 0%,transparent 70%);
+  opacity:0.4;pointer-events:none;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--warm);border:1px solid var(--border);
+  padding:0.4rem 1rem;border-radius:100px;
+  font-size:0.8rem;font-weight:500;color:var(--muted);
+  margin-bottom:2rem;
+  animation:fadeUp 0.8s ease both;
+}
+.badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  animation:pulse 2s ease infinite;
+}
+h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2.8rem,7vw,5rem);
+  line-height:1.05;
+  font-weight:400;
+  letter-spacing:-0.03em;
+  max-width:700px;
+  margin-bottom:1.5rem;
+  animation:fadeUp 0.8s ease 0.1s both;
+}
+h1 em{
+  font-style:italic;
+  color:var(--accent);
+}
+.hero p{
+  font-size:1.15rem;
+  color:var(--muted);
+  max-width:480px;
+  margin-bottom:2.5rem;
+  animation:fadeUp 0.8s ease 0.2s both;
+}
+.hero-actions{
+  display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp 0.8s ease 0.3s both;
+}
+.btn-primary{
+  background:var(--ink);color:var(--paper);
+  padding:0.85rem 2rem;border-radius:10px;
+  font-size:0.95rem;font-weight:600;
+  text-decoration:none;
+  transition:transform 0.2s,opacity 0.2s;
+  border:none;cursor:pointer;
+  font-family:inherit;
+}
+.btn-primary:hover{transform:translateY(-1px);opacity:0.9}
+.btn-secondary{
+  background:transparent;color:var(--ink);
+  padding:0.85rem 2rem;border-radius:10px;
+  font-size:0.95rem;font-weight:500;
+  text-decoration:none;
+  border:1px solid var(--border);
+  transition:border-color 0.2s;
+}
+.btn-secondary:hover{border-color:var(--muted)}
+
+/* FEATURES */
+.features{
+  padding:6rem 2rem;
+  max-width:1000px;margin:0 auto;
+}
+.section-label{
+  font-size:0.75rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--accent);
+  margin-bottom:1rem;
+}
+.features h2{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2rem,4vw,2.8rem);
+  font-weight:400;
+  letter-spacing:-0.02em;
+  margin-bottom:3rem;
+  max-width:500px;
+}
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.5rem;
+}
+.feature-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:2rem;
+  transition:transform 0.3s ease,box-shadow 0.3s ease;
+}
+.feature-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.06);
+}
+.feature-icon{
+  width:48px;height:48px;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;
+  margin-bottom:1.25rem;
+}
+.fi-compare{background:#e8f0fe;color:#3b72d9}
+.fi-scan{background:#fce8e4;color:var(--accent)}
+.fi-agent{background:#e6f4ea;color:#2d8a4e}
+.feature-card h3{
+  font-size:1.05rem;font-weight:600;
+  margin-bottom:0.5rem;
+}
+.feature-card p{
+  font-size:0.9rem;color:var(--muted);
+  line-height:1.6;
+}
+
+/* HOW IT WORKS */
+.how{
+  padding:6rem 2rem;
+  background:var(--warm);
+}
+.how-inner{max-width:1000px;margin:0 auto}
+.how h2{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2rem,4vw,2.8rem);
+  font-weight:400;letter-spacing:-0.02em;
+  margin-bottom:3rem;
+}
+.steps{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:2rem;
+}
+.step{position:relative}
+.step-num{
+  font-family:'Instrument Serif',serif;
+  font-size:3rem;color:var(--accent);
+  opacity:0.3;line-height:1;
+  margin-bottom:0.75rem;
+}
+.step h3{
+  font-size:1rem;font-weight:600;
+  margin-bottom:0.4rem;
+}
+.step p{font-size:0.85rem;color:var(--muted)}
+
+/* WAITLIST */
+.waitlist{
+  padding:6rem 2rem;
+  text-align:center;
+}
+.waitlist-inner{
+  max-width:500px;margin:0 auto;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:3rem 2.5rem;
+}
+.waitlist h2{
+  font-family:'Instrument Serif',serif;
+  font-size:1.8rem;font-weight:400;
+  letter-spacing:-0.02em;
+  margin-bottom:0.75rem;
+}
+.waitlist p{
+  font-size:0.9rem;color:var(--muted);
+  margin-bottom:2rem;
+}
+.email-form{
+  display:flex;gap:0.5rem;
+}
+.email-form input{
+  flex:1;
+  padding:0.8rem 1rem;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:0.9rem;
+  font-family:inherit;
+  background:var(--paper);
+  outline:none;
+  transition:border-color 0.2s;
+}
+.email-form input:focus{border-color:var(--accent)}
+.email-form button{
+  padding:0.8rem 1.5rem;
+  white-space:nowrap;
+}
+.form-note{
+  font-size:0.75rem;color:var(--muted);
+  margin-top:0.75rem;
+}
+
+/* FOOTER */
+footer{
+  padding:3rem 2rem;
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+footer p{font-size:0.8rem;color:var(--muted)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--ink)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes pulse{
+  0%,100%{opacity:1}
+  50%{opacity:0.4}
+}
+
+/* SCROLL ANIMATIONS */
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.6s ease,transform 0.6s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* MOBILE */
+@media(max-width:640px){
+  nav{padding:1rem}
+  .nav-links a:not(.nav-cta){display:none}
+  .hero{padding:7rem 1.5rem 3rem}
+  .email-form{flex-direction:column}
+  .features,.how,.waitlist{padding:4rem 1.5rem}
+  .waitlist-inner{padding:2rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">torellio<span>.</span></a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#waitlist" class="nav-cta">Join waitlist</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Coming soon — AMD Developer Hackathon 2026
+  </div>
+  <h1>Stop guessing. Start <em>knowing</em> what to buy.</h1>
+  <p>AI agents that research products, compare specs, find the best prices, and match items to your space — so you don't have to.</p>
+  <div class="hero-actions">
+    <a href="#waitlist" class="btn-primary">Join the waitlist</a>
+    <a href="#features" class="btn-secondary">See how it works</a>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="section-label reveal">What Torellio does</div>
+  <h2 class="reveal">Three tools. One smarter way to shop.</h2>
+  <div class="feature-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-compare">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      </div>
+      <h3>Smart comparison</h3>
+      <p>Open product tabs in your browser, click compare. AI agents extract specs, research reviews, and deliver a clear verdict with the best price.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-scan">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+      <h3>Visual scanner</h3>
+      <p>Photograph a room and let AI identify the style, colours, and aesthetic — then find matching furniture and decor with links to buy.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-agent">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>Agent-powered research</h3>
+      <p>Four AI agents work together — extracting data, researching alternatives, analysing tradeoffs, and giving you a personalised recommendation.</p>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="section-label reveal">How it works</div>
+    <h2 class="reveal">From open tabs to clear answers in seconds.</h2>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>Browse as normal</h3>
+        <p>Open product pages on any retailer. Torellio sits quietly in your browser until you need it.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h3>Click compare</h3>
+        <p>Hit the Torellio button. AI agents immediately start extracting specs and researching each product.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h3>Agents do the work</h3>
+        <p>They find reviews, check prices across retailers, and weigh up the tradeoffs — all in real time.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <h3>Get your verdict</h3>
+        <p>A clear recommendation with reasoning, a spec comparison, and the best price with a direct link to buy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="waitlist" id="waitlist">
+  <div class="waitlist-inner reveal">
+    <h2>Be first to try Torellio</h2>
+    <p>We're launching soon. Drop your email and we'll let you know when the extension and web app are ready.</p>
+    <form class="email-form" onsubmit="handleSubmit(event)">
+      <input type="email" placeholder="you@example.com" required id="email-input">
+      <button type="submit" class="btn-primary" id="submit-btn">Join waitlist</button>
+    </form>
+    <div class="form-note">No spam. Just a launch notification.</div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Torellio &middot; Built by <a href="https://bongosclub.uk" target="_blank" rel="noopener">David Jones</a></p>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const input = document.getElementById('email-input');
+  btn.textContent = 'You\'re in!';
+  btn.style.background = '#2d8a4e';
+  input.disabled = true;
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Joined';
+  }, 1500);
+}
+</script>
+
+</body>
+</html>
