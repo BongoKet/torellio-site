@@ -1,0 +1,106 @@
+TORELLIO — PRIVACY POLICY DRAFT
+================================
+Last updated: April 2026
+
+---
+
+1. WHO WE ARE
+
+Torellio is an AI-powered shopping assistant currently in early development.
+This privacy policy explains what personal data we collect through our website
+(torellio.com or similar) and how we use it.
+
+If you have any questions, contact us at: [YOUR EMAIL ADDRESS]
+
+---
+
+2. WHAT DATA WE COLLECT AND WHY
+
+a) Waitlist sign-ups
+   - Your email address
+   - The date and time you signed up
+   - The page you came from (referrer URL, if available)
+
+   Why: So we can notify you when Torellio launches. Nothing else.
+
+b) Feature ideas
+   - Your idea and category
+   - Your email address (optional — only if you choose to provide it)
+   - The date and time of submission
+
+   Why: To help us prioritise what to build. We may follow up if you left
+   an email and we have questions about your idea.
+
+---
+
+3. HOW WE STORE YOUR DATA
+
+Your data is stored securely in Cloudflare KV (key-value storage), hosted
+on Cloudflare's infrastructure within their global network.
+
+We do not use cookies. We do not use analytics tracking. We do not use
+any third-party marketing or advertising tools.
+
+---
+
+4. WHO WE SHARE YOUR DATA WITH
+
+We do not sell, trade, or share your personal data with third parties.
+
+The only sub-processor involved is Cloudflare, Inc., who stores the data
+on our behalf. Cloudflare's privacy policy is available at cloudflare.com/privacypolicy.
+
+---
+
+5. HOW LONG WE KEEP YOUR DATA
+
+Waitlist email addresses will be kept until:
+  - We send the launch notification email, after which they will be deleted, OR
+  - You ask us to remove you (see Section 6)
+
+Feature ideas (without email) may be kept indefinitely as product research.
+If you attached an email to an idea, that email will be deleted after we have
+reviewed it or within 12 months, whichever is sooner.
+
+---
+
+6. YOUR RIGHTS (GDPR)
+
+If you are based in the UK or EU, you have the right to:
+
+  - Access: Request a copy of the data we hold about you
+  - Deletion: Ask us to delete your data at any time
+  - Correction: Ask us to correct inaccurate data
+  - Restriction: Ask us to stop processing your data
+  - Portability: Receive your data in a machine-readable format
+  - Object: Object to us processing your data
+
+To exercise any of these rights, email us at: getintouch@bongosclub.uk
+We will respond within 30 days.
+
+---
+
+7. LEGAL BASIS FOR PROCESSING (GDPR)
+
+We process your email address on the basis of your consent — you actively
+chose to join the waitlist. You can withdraw consent at any time by emailing
+us and we will delete your data promptly.
+
+---
+
+8. CHANGES TO THIS POLICY
+
+If we make material changes to this policy, we will update the date at the
+top of this page. We will not retroactively change how we handle data
+already collected without notifying you.
+
+---
+
+9. CONTACT
+
+For any privacy-related queries or to exercise your rights:
+Email: getintouch@bongosclub.uk
+
+[OPTIONAL: If you are unhappy with how we handle your data, you have the
+right to lodge a complaint with the UK Information Commissioner's Office (ICO)
+at ico.org.uk.]
