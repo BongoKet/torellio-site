@@ -267,6 +267,35 @@ h1 em{
   margin-top:0.75rem;
 }
 
+/* IDEAS CTA */
+.ideas-cta{
+  padding:4rem 2rem 6rem;
+  max-width:1000px;margin:0 auto;
+}
+.ideas-cta-inner{
+  background:var(--warm);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:3rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:2rem;
+}
+.ideas-cta-text h2{
+  font-family:'Instrument Serif',serif;
+  font-size:1.8rem;font-weight:400;
+  letter-spacing:-0.02em;
+  margin-bottom:0.5rem;
+}
+.ideas-cta-text p{
+  font-size:0.9rem;color:var(--muted);
+  max-width:380px;
+}
+@media(max-width:640px){
+  .ideas-cta-inner{flex-direction:column;align-items:flex-start;padding:2rem 1.5rem}
+}
+
 /* FOOTER */
 footer{
   padding:3rem 2rem;
@@ -297,7 +326,8 @@ footer a:hover{color:var(--ink)}
 /* MOBILE */
 @media(max-width:640px){
   nav{padding:1rem}
-  .nav-links a:not(.nav-cta){display:none}
+  .nav-links a:not(.nav-cta):not(.nav-ideas){display:none}
+  .nav-ideas{font-size:0.8rem}
   .hero{padding:7rem 1.5rem 3rem}
   .email-form{flex-direction:column}
   .features,.how,.waitlist{padding:4rem 1.5rem}
@@ -312,7 +342,7 @@ footer a:hover{color:var(--ink)}
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#how">How it works</a>
-    <a href="/ideas">Share an idea</a>
+    <a href="/ideas" class="nav-ideas">Share an idea</a>
     <a href="#waitlist" class="nav-cta">Join waitlist</a>
   </div>
 </nav>
@@ -420,6 +450,16 @@ footer a:hover{color:var(--ink)}
     <p style="font-size:0.8rem;color:var(--muted);margin-top:1rem">
       <span id="waitlist-count" style="font-weight:600;color:var(--ink)"></span>
     </p>
+  </div>
+</section>
+
+<section class="ideas-cta">
+  <div class="ideas-cta-inner reveal">
+    <div class="ideas-cta-text">
+      <h2>Help shape what we build</h2>
+      <p>Torellio is still in development. Tell us what features you actually want — every idea gets read and considered.</p>
+    </div>
+    <a href="/ideas" class="btn-primary" style="white-space:nowrap;flex-shrink:0">Share an idea &rarr;</a>
   </div>
 </section>
 

@@ -390,10 +390,8 @@ async function loadStats() {
     const res = await fetch(`${WORKER_URL}/api/stats`);
     const data = await res.json();
     document.getElementById('waitlist-count').textContent = data.waitlist.toLocaleString();
-    document.getElementById('ideas-count').textContent = data.ideas.toLocaleString();
   } catch {
     document.getElementById('waitlist-count').textContent = '—';
-    document.getElementById('ideas-count').textContent = '—';
   }
 }
 loadStats();
