@@ -7,7 +7,7 @@ compatibility_date = "2024-01-01"
 # paste the resulting id below
 [[kv_namespaces]]
 binding = "TORELLIO_KV"
-id = "PASTE_YOUR_KV_ID_HERE"
+id = "24208a9826e34ca9a8b09a4384c7d5bc"
 
 [vars]
 # Set your export secret via: wrangler secret put EXPORT_SECRET
