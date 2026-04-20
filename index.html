@@ -267,34 +267,57 @@ h1 em{
   margin-top:0.75rem;
 }
 
-/* IDEAS CTA */
-.ideas-cta{
-  padding:4rem 2rem 6rem;
-  max-width:1000px;margin:0 auto;
+/* INLINE IDEA FORM */
+.idea-step{
+  border-top:1px solid var(--border);
+  margin-top:1.75rem;
+  padding-top:1.75rem;
+  text-align:left;
 }
-.ideas-cta-inner{
-  background:var(--warm);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:3rem;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:2rem;
+.idea-step-label{
+  font-size:0.75rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--accent);margin-bottom:0.5rem;
 }
-.ideas-cta-text h2{
+.idea-step h3{
   font-family:'Instrument Serif',serif;
-  font-size:1.8rem;font-weight:400;
-  letter-spacing:-0.02em;
-  margin-bottom:0.5rem;
+  font-size:1.2rem;font-weight:400;
+  margin-bottom:0.25rem;
 }
-.ideas-cta-text p{
-  font-size:0.9rem;color:var(--muted);
-  max-width:380px;
+.idea-step > p{font-size:0.85rem;color:var(--muted);margin-bottom:1.25rem}
+.idea-field{margin-bottom:1rem}
+.idea-field label{
+  display:block;font-size:0.8rem;font-weight:500;
+  margin-bottom:0.4rem;
 }
-@media(max-width:640px){
-  .ideas-cta-inner{flex-direction:column;align-items:flex-start;padding:2rem 1.5rem}
+.idea-field select,.idea-field textarea{
+  width:100%;
+  padding:0.7rem 0.9rem;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:0.875rem;font-family:inherit;
+  background:var(--paper);color:var(--ink);
+  outline:none;
+  transition:border-color 0.2s;
+  appearance:none;
 }
+.idea-field select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a7870' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 0.9rem center;
+  padding-right:2.5rem;cursor:pointer;
+}
+.idea-field textarea{resize:vertical;min-height:100px;line-height:1.6}
+.idea-field select:focus,.idea-field textarea:focus{border-color:var(--accent)}
+.idea-actions{display:flex;gap:0.75rem;margin-top:0.25rem}
+.idea-actions .btn-primary{flex:1;padding:0.75rem 1rem;font-size:0.875rem}
+.btn-skip{
+  background:transparent;color:var(--muted);
+  padding:0.75rem 1rem;border-radius:10px;
+  font-size:0.875rem;font-weight:500;
+  border:1px solid var(--border);cursor:pointer;
+  font-family:inherit;transition:border-color 0.2s;
+}
+.btn-skip:hover{border-color:var(--muted);color:var(--ink)}
 
 /* FOOTER */
 footer{
@@ -341,7 +364,7 @@ footer a:hover{color:var(--ink)}
   <a href="/" class="logo">torellio<span>.</span></a>
   <div class="nav-links">
     <a href="#features">Features</a>
-    <a href="#how">How it works</a>
+    <a href="/product">Product</a>
     <a href="/ideas" class="nav-ideas">Share an idea</a>
     <a href="#waitlist" class="nav-cta">Join waitlist</a>
   </div>
@@ -427,39 +450,53 @@ footer a:hover{color:var(--ink)}
         <input type="email" placeholder="you@example.com" required id="email-input">
         <button type="submit" class="btn-primary" id="submit-btn">Join waitlist</button>
       </form>
-      <div class="form-note">
-        No spam. Just a launch notification. &nbsp;·&nbsp;
-        <a href="/ideas" style="color:var(--muted);text-decoration:underline;text-underline-offset:3px">Got a feature idea?</a>
-      </div>
+      <div class="form-note">No spam. Just a launch notification.</div>
     </div>
 
     <div id="waitlist-success" style="display:none">
       <div style="font-size:1.5rem;margin-bottom:0.5rem">🎉</div>
       <p style="font-weight:500;color:var(--ink);margin-bottom:0.25rem">You're on the list!</p>
-      <p style="font-size:0.85rem">We'll be in touch when Torellio launches. &nbsp;·&nbsp;
-        <a href="/ideas" style="color:var(--muted);text-decoration:underline;text-underline-offset:3px">Share a feature idea?</a>
-      </p>
+      <p style="font-size:0.85rem;color:var(--muted)">We'll be in touch when Torellio launches.</p>
+      <div class="idea-step" id="inline-idea-form">
+        <div class="idea-step-label">While you're here</div>
+        <h3>Got a feature idea?</h3>
+        <p>Tell us what would make Torellio useful for you — every idea gets read.</p>
+        <form id="inline-ideas-form" novalidate>
+          <div class="idea-field">
+            <label for="idea-category">Category</label>
+            <select id="idea-category" required>
+              <option value="" disabled selected>Select a category…</option>
+              <option value="Comparison">Comparison — how products are compared</option>
+              <option value="Visual Scanner">Visual Scanner — room photo feature</option>
+              <option value="Price Tracking">Price Tracking — alerts, history, accuracy</option>
+              <option value="Browser Extension">Browser Extension — how it works in your browser</option>
+              <option value="Retailers">Retailers — which shops are supported</option>
+              <option value="Results">Results — how verdicts and recommendations work</option>
+              <option value="Other">Other — anything else</option>
+            </select>
+          </div>
+          <div class="idea-field">
+            <label for="idea-text">Your idea</label>
+            <textarea id="idea-text" placeholder="e.g. I'd love a price history chart…" maxlength="1000" required></textarea>
+          </div>
+          <div class="idea-actions">
+            <button type="submit" class="btn-primary" id="idea-submit-btn">Submit idea</button>
+            <button type="button" class="btn-skip" onclick="skipIdea()">Skip</button>
+          </div>
+        </form>
+      </div>
+      <div id="inline-idea-done" style="display:none;margin-top:1.25rem">
+        <p style="font-size:0.875rem;color:var(--muted)">Thanks — idea received. We'll see you at launch.</p>
+      </div>
     </div>
 
     <div id="waitlist-duplicate" style="display:none">
-      <p style="font-size:0.9rem;color:var(--muted)">You're already on the list — we'll be in touch. &nbsp;·&nbsp;
-        <a href="/ideas" style="color:var(--muted);text-decoration:underline;text-underline-offset:3px">Got a feature idea?</a>
-      </p>
+      <p style="font-size:0.9rem;color:var(--muted)">You're already on the list — we'll be in touch.</p>
     </div>
 
-    <p style="font-size:0.8rem;color:var(--muted);margin-top:1rem">
+    <p style="font-size:0.8rem;color:var(--muted);margin-top:1.25rem">
       <span id="waitlist-count" style="font-weight:600;color:var(--ink)"></span>
     </p>
-  </div>
-</section>
-
-<section class="ideas-cta">
-  <div class="ideas-cta-inner reveal">
-    <div class="ideas-cta-text">
-      <h2>Help shape what we build</h2>
-      <p>Torellio is still in development. Tell us what features you actually want — every idea gets read and considered.</p>
-    </div>
-    <a href="/ideas" class="btn-primary" style="white-space:nowrap;flex-shrink:0">Share an idea &rarr;</a>
   </div>
 </section>
 
@@ -497,8 +534,7 @@ loadCount();
 async function handleSubmit(e) {
   e.preventDefault();
   const btn = document.getElementById('submit-btn');
-  const input = document.getElementById('email-input');
-  const email = input.value.trim();
+  const email = document.getElementById('email-input').value.trim();
 
   btn.disabled = true;
   btn.textContent = 'Joining…';
@@ -524,6 +560,35 @@ async function handleSubmit(e) {
     btn.textContent = 'Join waitlist';
     alert('Something went wrong. Please try again.');
   }
+}
+
+document.getElementById('inline-ideas-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('idea-submit-btn');
+  const category = document.getElementById('idea-category').value;
+  const idea = document.getElementById('idea-text').value.trim();
+
+  if (!category || idea.length < 10) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    await fetch(`${WORKER_URL}/api/ideas`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idea, category }),
+    });
+  } catch {}
+
+  showIdeaDone();
+});
+
+function skipIdea() { showIdeaDone(); }
+
+function showIdeaDone() {
+  document.getElementById('inline-idea-form').style.display = 'none';
+  document.getElementById('inline-idea-done').style.display = 'block';
 }
 </script>
 
