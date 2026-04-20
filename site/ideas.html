@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share an Idea — Torellio</title>
+<meta name="description" content="Got a feature idea for Torellio? We'd love to hear it. Help shape what we build next.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#1a1a18;
+  --paper:#faf9f6;
+  --warm:#f5f0e8;
+  --accent:#c45a3c;
+  --accent-light:#f0d9cf;
+  --muted:#7a7870;
+  --border:#e2dfd8;
+  --radius:12px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(250,249,246,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-family:'Instrument Serif',serif;
+  font-size:1.5rem;font-weight:400;
+  letter-spacing:-0.02em;
+  color:var(--ink);text-decoration:none;
+}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{
+  text-decoration:none;color:var(--muted);
+  font-size:0.875rem;font-weight:500;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{
+  background:var(--ink);color:var(--paper) !important;
+  padding:0.5rem 1.25rem;border-radius:8px;
+  font-size:0.875rem;font-weight:600;
+}
+
+.page{
+  max-width:680px;
+  margin:0 auto;
+  padding:8rem 2rem 4rem;
+}
+
+.back-link{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-size:0.85rem;color:var(--muted);
+  text-decoration:none;
+  margin-bottom:2.5rem;
+  transition:color 0.2s;
+}
+.back-link:hover{color:var(--ink)}
+.back-link svg{width:14px;height:14px}
+
+.page-header{margin-bottom:2.5rem}
+.section-label{
+  font-size:0.75rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--accent);margin-bottom:0.75rem;
+}
+h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(1.8rem,4vw,2.6rem);
+  font-weight:400;letter-spacing:-0.02em;
+  line-height:1.15;margin-bottom:0.75rem;
+}
+.page-header p{
+  font-size:1rem;color:var(--muted);
+  max-width:480px;
+}
+
+/* Stats bar */
+.stats-bar{
+  display:flex;gap:2rem;
+  padding:1rem 1.5rem;
+  background:var(--warm);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  margin-bottom:2.5rem;
+}
+.stat{display:flex;flex-direction:column}
+.stat-num{
+  font-family:'Instrument Serif',serif;
+  font-size:1.6rem;font-weight:400;
+  color:var(--accent);line-height:1;
+}
+.stat-label{font-size:0.75rem;color:var(--muted);margin-top:0.2rem}
+
+/* Form card */
+.form-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:2.5rem;
+}
+
+.field{margin-bottom:1.5rem}
+label{
+  display:block;
+  font-size:0.85rem;font-weight:500;
+  color:var(--ink);margin-bottom:0.5rem;
+}
+.field-note{
+  font-size:0.75rem;color:var(--muted);
+  margin-bottom:0.5rem;margin-top:-0.25rem;
+}
+select,textarea,input[type="email"]{
+  width:100%;
+  padding:0.8rem 1rem;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:0.9rem;
+  font-family:inherit;
+  background:var(--paper);
+  color:var(--ink);
+  outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  appearance:none;
+}
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a7870' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 1rem center;
+  padding-right:2.5rem;
+  cursor:pointer;
+}
+textarea{resize:vertical;min-height:140px;line-height:1.6}
+select:focus,textarea:focus,input[type="email"]:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(196,90,60,0.1);
+}
+
+.char-count{
+  font-size:0.75rem;color:var(--muted);
+  text-align:right;margin-top:0.3rem;
+}
+.char-count.warning{color:var(--accent)}
+
+.optional-tag{
+  font-size:0.7rem;color:var(--muted);
+  background:var(--warm);
+  padding:0.1rem 0.4rem;border-radius:4px;
+  margin-left:0.4rem;font-weight:400;
+}
+
+.submit-btn{
+  width:100%;
+  background:var(--ink);color:var(--paper);
+  padding:0.9rem 2rem;border-radius:10px;
+  font-size:0.95rem;font-weight:600;
+  border:none;cursor:pointer;
+  font-family:inherit;
+  transition:transform 0.2s,opacity 0.2s;
+  margin-top:0.5rem;
+}
+.submit-btn:hover:not(:disabled){transform:translateY(-1px);opacity:0.9}
+.submit-btn:disabled{opacity:0.6;cursor:not-allowed}
+
+/* Success state */
+.success-state{
+  display:none;
+  text-align:center;
+  padding:3rem 2rem;
+}
+.success-icon{
+  width:56px;height:56px;
+  background:var(--accent-light);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.25rem;
+}
+.success-icon svg{width:24px;height:24px;color:var(--accent)}
+.success-state h2{
+  font-family:'Instrument Serif',serif;
+  font-size:1.5rem;font-weight:400;
+  margin-bottom:0.5rem;
+}
+.success-state p{font-size:0.9rem;color:var(--muted);margin-bottom:1.5rem}
+.another-btn{
+  background:transparent;color:var(--ink);
+  padding:0.7rem 1.5rem;border-radius:8px;
+  font-size:0.875rem;font-weight:500;
+  border:1px solid var(--border);
+  cursor:pointer;font-family:inherit;
+  transition:border-color 0.2s;
+}
+.another-btn:hover{border-color:var(--muted)}
+
+/* Categories legend */
+.categories{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0.75rem;
+  margin-top:2.5rem;
+  padding-top:2.5rem;
+  border-top:1px solid var(--border);
+}
+.category-pill{
+  display:flex;align-items:flex-start;gap:0.5rem;
+  padding:0.75rem;
+  background:var(--warm);
+  border-radius:8px;
+  font-size:0.8rem;
+}
+.category-pill-dot{
+  width:8px;height:8px;border-radius:50%;
+  margin-top:3px;flex-shrink:0;
+}
+.category-pill strong{display:block;font-weight:500;margin-bottom:0.1rem}
+.category-pill span{color:var(--muted);font-size:0.75rem}
+
+footer{
+  padding:3rem 2rem;border-top:1px solid var(--border);
+  text-align:center;margin-top:4rem;
+}
+footer p{font-size:0.8rem;color:var(--muted)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--ink)}
+
+@media(max-width:640px){
+  nav{padding:1rem}
+  .nav-links a:not(.nav-cta){display:none}
+  .page{padding:6rem 1.25rem 3rem}
+  .form-card{padding:1.75rem 1.25rem}
+  .categories{grid-template-columns:1fr}
+  .stats-bar{gap:1.25rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">torellio<span>.</span></a>
+  <div class="nav-links">
+    <a href="/#features">Features</a>
+    <a href="/#waitlist" class="nav-cta">Join waitlist</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <a href="/" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Back to home
+  </a>
+
+  <div class="page-header">
+    <div class="section-label">Feature ideas</div>
+    <h1>Help us build what you actually want.</h1>
+    <p>Torellio is in early development. Tell us what would make it genuinely useful for you — every idea gets read.</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-num" id="waitlist-count">—</span>
+      <span class="stat-label">On the waitlist</span>
+    </div>
+  </div>
+
+  <div class="form-card">
+
+    <div id="form-state">
+      <form id="ideas-form" novalidate>
+
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category" name="category" required>
+            <option value="" disabled selected>Select a category…</option>
+            <option value="Comparison">Comparison — how products are compared</option>
+            <option value="Visual Scanner">Visual Scanner — room photo feature</option>
+            <option value="Price Tracking">Price Tracking — alerts, history, accuracy</option>
+            <option value="Browser Extension">Browser Extension — how it works in your browser</option>
+            <option value="Retailers">Retailers — which shops are supported</option>
+            <option value="Results">Results — how verdicts and recommendations work</option>
+            <option value="Other">Other — anything else</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="idea">Your idea</label>
+          <div class="field-note">Be as specific as you like — the more detail, the more useful.</div>
+          <textarea
+            id="idea"
+            name="idea"
+            placeholder="e.g. I'd love a price history chart so I can see if a product has gone up or down over the last month…"
+            maxlength="1000"
+            required
+          ></textarea>
+          <div class="char-count"><span id="char-num">0</span> / 1000</div>
+        </div>
+
+        <div class="field">
+          <label for="email">
+            Your email
+            <span class="optional-tag">optional</span>
+          </label>
+          <div class="field-note">Only if you'd like us to follow up with you about this idea.</div>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+          >
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          Submit idea
+        </button>
+
+      </form>
+    </div>
+
+    <div class="success-state" id="success-state">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2>Idea received — thank you.</h2>
+      <p>We read every submission. Your idea helps shape what Torellio becomes.</p>
+      <button class="another-btn" onclick="resetForm()">Submit another idea</button>
+    </div>
+
+  </div>
+
+  <div class="categories">
+    <div class="category-pill">
+      <div class="category-pill-dot" style="background:#3b72d9"></div>
+      <div>
+        <strong>Comparison</strong>
+        <span>How specs and prices are compared side by side</span>
+      </div>
+    </div>
+    <div class="category-pill">
+      <div class="category-pill-dot" style="background:#c45a3c"></div>
+      <div>
+        <strong>Visual Scanner</strong>
+        <span>Room photo analysis and furniture matching</span>
+      </div>
+    </div>
+    <div class="category-pill">
+      <div class="category-pill-dot" style="background:#2d8a4e"></div>
+      <div>
+        <strong>Price Tracking</strong>
+        <span>Alerts, history charts, accuracy improvements</span>
+      </div>
+    </div>
+    <div class="category-pill">
+      <div class="category-pill-dot" style="background:#ba7517"></div>
+      <div>
+        <strong>Browser Extension</strong>
+        <span>How Torellio works inside your browser</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Torellio &middot; <a href="https://bongosclub.uk" target="_blank" rel="noopener">David Jones</a></p>
+</footer>
+
+<script>
+// Replace with your actual Worker URL once deployed
+const WORKER_URL = 'https://torellio-api.YOUR-SUBDOMAIN.workers.dev';
+
+// Load live stats
+async function loadStats() {
+  try {
+    const res = await fetch(`${WORKER_URL}/api/stats`);
+    const data = await res.json();
+    document.getElementById('waitlist-count').textContent = data.waitlist.toLocaleString();
+    document.getElementById('ideas-count').textContent = data.ideas.toLocaleString();
+  } catch {
+    document.getElementById('waitlist-count').textContent = '—';
+    document.getElementById('ideas-count').textContent = '—';
+  }
+}
+loadStats();
+
+// Character counter
+const textarea = document.getElementById('idea');
+const charNum = document.getElementById('char-num');
+textarea.addEventListener('input', () => {
+  const len = textarea.value.length;
+  charNum.textContent = len;
+  charNum.parentElement.classList.toggle('warning', len > 900);
+});
+
+// Form submission
+document.getElementById('ideas-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const category = document.getElementById('category').value;
+  const idea = document.getElementById('idea').value.trim();
+  const email = document.getElementById('email').value.trim();
+
+  if (!category) {
+    document.getElementById('category').focus();
+    return;
+  }
+  if (idea.length < 10) {
+    document.getElementById('idea').focus();
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch(`${WORKER_URL}/api/ideas`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idea, category, email: email || null }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      document.getElementById('form-state').style.display = 'none';
+      document.getElementById('success-state').style.display = 'block';
+      loadStats();
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Submit idea';
+      alert(data.error || 'Something went wrong, please try again.');
+    }
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'Submit idea';
+    alert('Could not connect. Please check your connection and try again.');
+  }
+});
+
+function resetForm() {
+  document.getElementById('ideas-form').reset();
+  charNum.textContent = '0';
+  document.getElementById('form-state').style.display = 'block';
+  document.getElementById('success-state').style.display = 'none';
+  document.getElementById('submit-btn').disabled = false;
+  document.getElementById('submit-btn').textContent = 'Submit idea';
+}
+</script>
+
+</body>
+</html>

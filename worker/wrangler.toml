@@ -1,0 +1,14 @@
+name = "torellio-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# KV namespace binding
+# After running `wrangler kv:namespace create TORELLIO_KV`
+# paste the resulting id below
+[[kv_namespaces]]
+binding = "TORELLIO_KV"
+id = "PASTE_YOUR_KV_ID_HERE"
+
+[vars]
+# Set your export secret via: wrangler secret put EXPORT_SECRET
+# Then type a password when prompted — keep this private
