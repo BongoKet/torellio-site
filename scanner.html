@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Scanner — Torellio</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    /* ---- Page layout ---- */
+    .site-header {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .hero {
+      padding: 56px 0 40px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 17px;
+      color: var(--ink-muted);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ---- Upload form ---- */
+    .upload-section { padding-bottom: 24px; }
+
+    .drop-zone {
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: var(--bg-warm);
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .drop-zone h2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .drop-zone p {
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .drop-zone .mobile-hint {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .drop-zone .desktop-hint { display: none; }
+      .drop-zone .mobile-hint { display: block; }
+    }
+
+    /* Preview thumbnail */
+    .preview-wrap {
+      display: none;
+      position: relative;
+      text-align: center;
+    }
+
+    .preview-wrap.visible { display: block; }
+
+    .preview-img {
+      max-height: 240px;
+      border-radius: var(--radius-sm);
+      margin: 0 auto 12px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+
+    .change-photo {
+      font-size: 13px;
+      color: var(--ink-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+
+    .change-photo:hover { color: var(--accent); }
+
+    /* Options */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 540px) {
+      .options-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ---- Loading state ---- */
+    .loading-state {
+      display: none;
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .loading-state.active { display: block; }
+
+    .loading-spinner-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .spinner-lg {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .agent-steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 360px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .agent-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-warm);
+      font-size: 14px;
+      color: var(--ink-muted);
+      transition: all 0.25s;
+    }
+
+    .agent-step.active {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .agent-step.done { color: var(--success); }
+
+    .step-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+
+    .step-dot-sm {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border-strong);
+      flex-shrink: 0;
+      transition: background 0.25s;
+    }
+
+    .agent-step.active .step-dot-sm {
+      background: var(--accent);
+      animation: step-pulse 1.4s ease-in-out infinite;
+    }
+
+    .agent-step.done .step-dot-sm { background: var(--success); }
+
+    /* ---- Results ---- */
+    .results-section {
+      display: none;
+      padding-bottom: 60px;
+    }
+
+    .results-section.active { display: block; }
+
+    /* Style profile card */
+    .style-profile-card {
+      background: linear-gradient(135deg, #1a1a18 0%, #2a2a26 100%);
+      color: #f0efe8;
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .style-profile-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(196, 90, 60, 0.15);
+      pointer-events: none;
+    }
+
+    .profile-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(240, 239, 232, 0.5);
+      margin-bottom: 10px;
+    }
+
+    .aesthetic-name {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: #f0efe8;
+      margin-bottom: 8px;
+      font-weight: 400;
+    }
+
+    .mood-text {
+      font-size: 15px;
+      color: rgba(240, 239, 232, 0.65);
+      margin-bottom: 20px;
+    }
+
+    .palette {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .palette-label {
+      font-size: 12px;
+      color: rgba(240, 239, 232, 0.5);
+    }
+
+    .colour-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: rgba(240, 239, 232, 0.8);
+    }
+
+    .colour-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.8;
+    }
+
+    /* Recommendations */
+    .recs-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .recs-header h2 {
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+    }
+
+    .recs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .rec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .rec-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .rec-image-placeholder {
+      background: var(--bg-warm);
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: var(--ink-faint);
+    }
+
+    .rec-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+
+    .rec-category {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--ink-faint);
+      margin-bottom: 6px;
+    }
+
+    .rec-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .rec-price {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-bottom: 10px;
+    }
+
+    .rec-reason {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.5;
+      flex: 1;
+      margin-bottom: 14px;
+    }
+
+    .rec-buy-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .rec-buy-btn:hover { background: var(--accent-hover); text-decoration: none; }
+
+    /* Try again */
+    .try-again-wrap { text-align: center; margin-top: 8px; }
+
+    /* Error */
+    .error-msg {
+      display: none;
+      background: #fef2f0;
+      border: 1px solid #f5c0b5;
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      color: #b04030;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .error-msg.active { display: block; }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--ink-faint);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="logo">torellio<span>.</span></div>
+      <span class="badge">Visual Scanner</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <h1>Photograph your room.<br>Find your style.</h1>
+        <p>Upload a photo and our AI agents will identify your aesthetic then find matching furniture and decor with buy links.</p>
+      </div>
+    </section>
+
+    <!-- Upload form -->
+    <section class="upload-section" id="uploadSection">
+      <div class="container">
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <!-- Drop zone -->
+        <div class="drop-zone" id="dropZone">
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            capture="environment"
+          />
+          <span class="drop-icon">📷</span>
+          <h2 class="desktop-hint">Drop your room photo here, or click to upload</h2>
+          <p class="desktop-hint">JPEG or PNG · Max 10MB</p>
+          <h2 class="mobile-hint">Tap to take a photo or choose from gallery</h2>
+          <p class="mobile-hint">JPEG or PNG · Max 10MB</p>
+        </div>
+
+        <!-- Image preview (shown after selection) -->
+        <div class="preview-wrap" id="previewWrap">
+          <img id="previewImg" class="preview-img" alt="Your room" />
+          <button class="change-photo" id="changePhoto">Choose a different photo</button>
+        </div>
+
+        <!-- Options -->
+        <div class="options-grid">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="budgetSelect">Budget</label>
+            <select class="form-control" id="budgetSelect">
+              <option value="">Any budget</option>
+              <option value="budget">Budget-friendly</option>
+              <option value="mid-range">Mid-range</option>
+              <option value="premium">Premium</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="prefsInput">Style preferences</label>
+            <input
+              type="text"
+              class="form-control"
+              id="prefsInput"
+              placeholder="e.g. Scandinavian, earthy tones…"
+            />
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="submitBtn" disabled>
+          Analyse my room
+        </button>
+      </div>
+    </section>
+
+    <!-- Loading state -->
+    <section class="loading-state" id="loadingState">
+      <div class="container">
+        <div class="loading-spinner-wrap">
+          <div class="spinner-lg"></div>
+        </div>
+        <div class="agent-steps-list">
+          <div class="agent-step" data-step="0">
+            <div class="step-dot-sm"></div>
+            <span>Identifying your style…</span>
+          </div>
+          <div class="agent-step" data-step="1">
+            <div class="step-dot-sm"></div>
+            <span>Searching for matching products…</span>
+          </div>
+          <div class="agent-step" data-step="2">
+            <div class="step-dot-sm"></div>
+            <span>Curating your recommendations…</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="results-section" id="resultsSection">
+      <div class="container">
+
+        <!-- Style profile -->
+        <div class="style-profile-card" id="styleProfileCard">
+          <div class="profile-label">Your style</div>
+          <div class="aesthetic-name" id="aestheticName"></div>
+          <div class="mood-text" id="moodText"></div>
+          <div class="palette">
+            <span class="palette-label">Palette:</span>
+            <div id="colourPills"></div>
+          </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="recs-header">
+          <h2>Recommended for your room</h2>
+        </div>
+
+        <div class="recs-grid" id="recsGrid"></div>
+
+        <div class="try-again-wrap">
+          <button class="btn btn-outline" id="tryAgainBtn">← Scan another room</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      &copy; 2026 Torellio · AI-powered by AMD Developer Cloud
+    </div>
+  </footer>
+
+  <script>
+    "use strict";
+
+    const BACKEND_URL = localStorage.getItem("torellio_backend_url") || "https://api.torellio.com";
+
+    const $ = (id) => document.getElementById(id);
+
+    const dropZone = $("dropZone");
+    const imageInput = $("imageInput");
+    const previewWrap = $("previewWrap");
+    const previewImg = $("previewImg");
+    const changePhoto = $("changePhoto");
+    const submitBtn = $("submitBtn");
+    const uploadSection = $("uploadSection");
+    const loadingState = $("loadingState");
+    const resultsSection = $("resultsSection");
+    const errorMsg = $("errorMsg");
+
+    let selectedFile = null;
+
+    // --- Drag-and-drop ---
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("drag-over");
+    });
+
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
+
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("drag-over");
+      const file = e.dataTransfer?.files?.[0];
+      if (file && file.type.startsWith("image/")) selectFile(file);
+    });
+
+    imageInput.addEventListener("change", () => {
+      const file = imageInput.files?.[0];
+      if (file) selectFile(file);
+    });
+
+    changePhoto.addEventListener("click", () => {
+      selectedFile = null;
+      previewWrap.classList.remove("visible");
+      dropZone.style.display = "";
+      imageInput.value = "";
+      submitBtn.disabled = true;
+    });
+
+    function selectFile(file) {
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        previewWrap.classList.add("visible");
+        dropZone.style.display = "none";
+        submitBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // --- Submit ---
+    submitBtn.addEventListener("click", async () => {
+      if (!selectedFile) return;
+      showError("");
+      showView("loading");
+      animateSteps();
+
+      const formData = new FormData();
+      formData.append("image", selectedFile);
+      formData.append("budget", $("budgetSelect").value);
+      formData.append("preferences", $("prefsInput").value.trim());
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/scan`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`Server error ${res.status}: ${text}`);
+        }
+
+        const data = await res.json();
+        renderResults(data);
+        showView("results");
+      } catch (err) {
+        showView("upload");
+        showError(`Something went wrong: ${err.message}`);
+      }
+    });
+
+    $("tryAgainBtn").addEventListener("click", () => {
+      selectedFile = null;
+      previewWrap.classList.remove("visible");
+      dropZone.style.display = "";
+      imageInput.value = "";
+      submitBtn.disabled = true;
+      $("prefsInput").value = "";
+      $("budgetSelect").value = "";
+      showView("upload");
+    });
+
+    // --- Step animation ---
+    function animateSteps() {
+      const steps = document.querySelectorAll(".agent-step");
+      steps.forEach((s) => s.classList.remove("active", "done"));
+      let current = 0;
+      function advance() {
+        if (current > 0) steps[current - 1].classList.replace("active", "done");
+        if (current < steps.length) {
+          steps[current].classList.add("active");
+          current++;
+          setTimeout(advance, 18000);
+        }
+      }
+      advance();
+    }
+
+    // --- Render results ---
+    function renderResults(data) {
+      const profile = data.style_profile || {};
+
+      $("aestheticName").textContent = profile.aesthetic || "Unknown aesthetic";
+      $("moodText").textContent = profile.mood || "";
+
+      // Colour pills
+      const pillsContainer = $("colourPills");
+      pillsContainer.innerHTML = "";
+      const colours = Array.isArray(profile.colours) ? profile.colours : [];
+      colours.slice(0, 6).forEach((colour) => {
+        const pill = document.createElement("span");
+        pill.className = "colour-pill";
+        pill.textContent = colour;
+        pillsContainer.appendChild(pill);
+      });
+
+      // Recommendations grid
+      const grid = $("recsGrid");
+      const recs = Array.isArray(data.recommendations) ? data.recommendations : [];
+
+      if (recs.length === 0) {
+        grid.innerHTML = `<p style="color:var(--ink-muted); grid-column: 1/-1;">No recommendations returned. Try uploading a clearer room photo.</p>`;
+        return;
+      }
+
+      const categoryIcons = {
+        seating: "🛋️",
+        surfaces: "🪵",
+        lighting: "💡",
+        accessories: "🪴",
+        decorative: "🪴",
+        rugs: "🎨",
+      };
+
+      grid.innerHTML = recs.map((rec) => {
+        const cat = (rec.category || "").toLowerCase();
+        const icon = Object.entries(categoryIcons).find(([k]) => cat.includes(k))?.[1] || "✨";
+
+        return `
+          <div class="rec-card">
+            <div class="rec-image-placeholder">${icon}</div>
+            <div class="rec-body">
+              <div class="rec-category">${escapeHtml(rec.category || "")}</div>
+              <div class="rec-name">${escapeHtml(rec.name || "")}</div>
+              <div class="rec-price">${escapeHtml(rec.price_range || "")}</div>
+              <div class="rec-reason">${escapeHtml(rec.match_reason || rec.description || "")}</div>
+              ${rec.affiliate_url
+                ? `<a href="${escapeHtml(rec.affiliate_url)}" target="_blank" rel="noopener" class="rec-buy-btn">View product →</a>`
+                : ""}
+            </div>
+          </div>`;
+      }).join("");
+    }
+
+    // --- View helpers ---
+    function showView(view) {
+      uploadSection.style.display = view === "upload" ? "block" : "none";
+      loadingState.classList.toggle("active", view === "loading");
+      resultsSection.classList.toggle("active", view === "results");
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.classList.toggle("active", !!msg);
+    }
+
+    // --- Utils ---
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+  </script>
+
+</body>
+</html>
