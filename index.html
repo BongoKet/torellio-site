@@ -373,6 +373,40 @@ footer a:hover{color:var(--ink)}
   .features,.how,.waitlist{padding:4rem 1.5rem}
   .waitlist-inner{padding:2rem 1.5rem}
 }
+
+/* ---- Hero search bar ---- */
+.hero-search{
+  display:flex;
+  max-width:580px;width:100%;margin:1.5rem auto 0.75rem;
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:10px;overflow:hidden;
+  box-shadow:0 2px 12px rgba(26,26,24,0.08);
+}
+.hero-search input{
+  flex:1;padding:14px 18px;border:none;
+  font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);
+  outline:none;background:transparent;min-width:0;
+}
+.hero-search input::placeholder{color:var(--muted)}
+.hero-search button{
+  padding:14px 22px;background:var(--accent);color:#fff;border:none;
+  font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;
+  cursor:pointer;transition:background 0.15s;white-space:nowrap;
+}
+.hero-search button:hover{background:#b04d32}
+.hero-examples{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+}
+.hero-ex-chip{
+  padding:5px 14px;background:rgba(255,255,255,0.7);
+  border:1px solid var(--border);border-radius:20px;
+  font-size:13px;color:var(--muted);cursor:pointer;transition:all 0.15s;
+}
+.hero-ex-chip:hover{border-color:var(--accent);color:var(--accent)}
+@media(max-width:600px){
+  .hero-search{flex-direction:column;border-radius:10px}
+  .hero-search button{border-radius:0 0 8px 8px;padding:12px}
+}
 </style>
 </head>
 <body>
@@ -383,19 +417,28 @@ footer a:hover{color:var(--ink)}
     <a href="#features">Features</a>
     <a href="/product">Product</a>
     <a href="/ideas" class="nav-ideas">Share an idea</a>
-    <a href="#waitlist" class="nav-cta">Join waitlist</a>
+    <a href="/chat" class="nav-cta">Try now</a>
   </div>
 </nav>
 
 <section class="hero">
   <div class="badge">
     <span class="badge-dot"></span>
-    Coming soon — AMD Developer Hackathon 2026
+    Live now — AMD Developer Hackathon 2026
   </div>
-  <h1>Stop guessing. Start <em>knowing</em> what to buy.</h1>
-  <p>AI agents that research products, compare specs, find the best prices, and match items to your space — so you don't have to.</p>
-  <div class="hero-actions">
-    <a href="#waitlist" class="btn-primary">Join the waitlist</a>
+  <h1>Tell us what you want to buy.</h1>
+  <p>AI agents search the web, compare prices, and return the best UK deals — just ask in plain English.</p>
+  <div class="hero-search">
+    <input type="text" id="hero-q" placeholder="e.g. graphics card under £250, standing desk, noise cancelling headphones…" autocomplete="off" />
+    <button onclick="heroSearch()">Search →</button>
+  </div>
+  <div class="hero-examples">
+    <span class="hero-ex-chip" onclick="setHeroQ('graphics card under £250')">Graphics card £250</span>
+    <span class="hero-ex-chip" onclick="setHeroQ('noise cancelling headphones under £150')">Headphones £150</span>
+    <span class="hero-ex-chip" onclick="setHeroQ('standing desk under £400')">Standing desk £400</span>
+    <span class="hero-ex-chip" onclick="setHeroQ('mechanical keyboard under £100')">Keyboard £100</span>
+  </div>
+  <div class="hero-actions" style="margin-top:1.5rem">
     <a href="#features" class="btn-secondary">See how it works</a>
   </div>
 </section>
@@ -607,6 +650,18 @@ function showIdeaDone() {
   document.getElementById('inline-idea-form').style.display = 'none';
   document.getElementById('inline-idea-done').style.display = 'block';
 }
+
+function heroSearch() {
+  const q = document.getElementById('hero-q').value.trim();
+  window.location.href = q ? '/chat?q=' + encodeURIComponent(q) : '/chat';
+}
+function setHeroQ(text) {
+  document.getElementById('hero-q').value = text;
+  document.getElementById('hero-q').focus();
+}
+document.getElementById('hero-q').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') heroSearch();
+});
 </script>
 
 </body>
